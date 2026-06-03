@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#302611"/>
+      <stop offset="0.56" stop-color="#121215"/>
+      <stop offset="1" stop-color="#070709"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="130" y1="90" x2="382" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe18a"/>
+      <stop offset="0.45" stop-color="#c79722"/>
+      <stop offset="1" stop-color="#8b650d"/>
+    </linearGradient>
+    <filter id="softGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="92" fill="url(#bg)"/>
+  <circle cx="256" cy="222" r="166" fill="none" stroke="url(#gold)" stroke-width="9"/>
+  <circle cx="256" cy="222" r="137" fill="none" stroke="#c79722" stroke-width="4" stroke-dasharray="15 11"/>
+  <g filter="url(#softGlow)">
+    <path d="M148 246L182 156L236 220L256 118L304 220L360 156L398 246Z" fill="rgba(199,151,34,0.12)" stroke="url(#gold)" stroke-width="17" stroke-linejoin="round"/>
+    <path d="M166 264H380" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"/>
+    <path d="M184 292H362" stroke="#a97c19" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="182" cy="156" r="13" fill="#c79722" stroke="#ffe18a" stroke-width="5"/>
+    <circle cx="256" cy="118" r="15" fill="#c79722" stroke="#ffe18a" stroke-width="5"/>
+    <circle cx="360" cy="156" r="13" fill="#c79722" stroke="#ffe18a" stroke-width="5"/>
+  </g>
+  <text x="256" y="334" text-anchor="middle" fill="#d7aa35" font-family="Georgia, 'Times New Roman', serif" font-size="45" font-weight="700" letter-spacing="3">C.R.C</text>
+  <text x="256" y="400" text-anchor="middle" fill="#f5e6b2" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="800">Himnos</text>
+  <text x="256" y="434" text-anchor="middle" fill="#c79722" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="800">Cristo El Rey</text>
+</svg>

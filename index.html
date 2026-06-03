@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#6200ee" />
+    <title>Himnos Cristo El Rey</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon-512.png" />
+    <meta property="og:title" content="Himnos Cristo El Rey" />
+    <meta property="og:description" content="Himnario Cristo El Rey Oficial - Iglesia Cristo El Rey Central" />
+    <meta property="og:image" content="https://himnoscristoelrey.web.app/preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Himnos Cristo El Rey" />
+    <meta name="twitter:description" content="Himnario Cristo El Rey Oficial - Iglesia Cristo El Rey Central" />
+    <meta name="twitter:image" content="https://himnoscristoelrey.web.app/preview.png" />
+    <link rel="stylesheet" href="./styles.css?v=38" />
+  </head>
+  <body>
+    <header class="app-bar">
+      <button id="menuButton" class="bar-button" type="button" aria-label="Abrir menu">☰</button>
+      <button id="backButton" class="bar-button hidden" type="button" aria-label="Volver">‹</button>
+      <h1 id="screenTitle">Himnario Cristo El Rey</h1>
+      <button id="settingsButton" class="bar-button" type="button" aria-label="Configuracion">🔧</button>
+    </header>
+
+    <aside id="drawer" class="drawer" aria-hidden="true">
+      <div id="drawerScrim" class="drawer-scrim"></div>
+      <nav class="drawer-panel" aria-label="Menu principal">
+        <h2>Iglesia Cristo El Rey</h2>
+        <button type="button" data-nav="home">Inicio</button>
+        <button type="button" data-nav="favorites">Himnos Favoritos</button>
+        <button type="button" data-nav="about">Sobre Nosotros</button>
+      </nav>
+    </aside>
+
+    <main class="app-content">
+      <section id="homeScreen" class="screen active">
+        <label class="search-row">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Buscar himno..." autocomplete="off" />
+          <button id="clearSearch" type="button" aria-label="Limpiar busqueda">×</button>
+        </label>
+        <p id="offlineStatus" class="offline-status">Preparando cancionero offline...</p>
+        <section id="songList" class="song-list" aria-label="Listado de himnos"></section>
+        <section id="emptyState" class="empty-state hidden">
+          <h2>No encontre himnos</h2>
+          <p>Proba buscando por numero, titulo o parte de la letra.</p>
+        </section>
+      </section>
+
+      <section id="aboutScreen" class="screen about-screen">
+        <div class="about-block about-intro">
+          <h2>Iglesia Cristo El Rey Central</h2>
+          <p>Esta aplicacion, Himnario Cristo El Rey, fue desarrollada por Lucas Daniel Arzola con el proposito de compartir y preservar los himnos que forman parte del legado espiritual de la iglesia.</p>
+          <p>Todas las canciones incluidas en este himnario fueron escritas por el Pastor Victor Domingo Vera, fundador de nuestra iglesia, cuya inspiracion y liderazgo han guiado a nuestra comunidad desde sus inicios.</p>
+        </div>
+
+        <div class="about-block">
+          <h2>Ubicacion</h2>
+          <p>Nos encontramos en <a href="https://www.google.com/maps/search/?api=1&query=Coronel%20Mont%204250%2C%20Gregorio%20de%20Laferrere%2C%20Buenos%20Aires%2C%20Argentina" target="_blank" rel="noreferrer">Coronel Mont 4250, Gregorio de Laferrere, Buenos Aires, Argentina</a>.</p>
+          <iframe
+            class="map-frame"
+            title="Ubicacion de Iglesia Cristo El Rey Central"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Coronel%20Mont%204250%2C%20Gregorio%20de%20Laferrere%2C%20Buenos%20Aires%2C%20Argentina&output=embed">
+          </iframe>
+        </div>
+
+        <div class="about-block">
+          <h2>Redes</h2>
+          <div class="social-links">
+            <a class="social-link facebook" href="https://www.facebook.com/IglesiaCentralCristoelRey" target="_blank" rel="noreferrer">
+              <span aria-hidden="true">f</span>
+              Facebook
+            </a>
+            <a class="social-link youtube" href="https://www.youtube.com/@iglesia-CRC" target="_blank" rel="noreferrer">
+              <span aria-hidden="true">▶</span>
+              YouTube
+            </a>
+          </div>
+        </div>
+
+        <div class="about-block">
+          <h2>Dias y horarios de reuniones</h2>
+          <ul class="meeting-list">
+            <li><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Reunion%20de%20Oracion%20y%20Palabra%20de%20Dios&details=Iglesia%20Cristo%20El%20Rey&location=Coronel%20Mont%204250%2C%20Gregorio%20de%20Laferrere" target="_blank" rel="noreferrer">Martes 20:00 hs</a><span>Reunion de Oracion y Palabra de Dios</span></li>
+            <li><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Reunion%20de%20Oracion&details=Iglesia%20Cristo%20El%20Rey&location=Coronel%20Mont%204250%2C%20Gregorio%20de%20Laferrere" target="_blank" rel="noreferrer">Jueves 20:00 hs</a><span>Reunion de Oracion</span></li>
+            <li><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Reunion%20de%20culto%20Gigante&details=Iglesia%20Cristo%20El%20Rey&location=Coronel%20Mont%204250%2C%20Gregorio%20de%20Laferrere" target="_blank" rel="noreferrer">Sabado 20:00 hs</a><span>Reunion de culto Gigante</span></li>
+            <li><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Reunion%20de%20Domingo&details=Iglesia%20Cristo%20El%20Rey&location=Coronel%20Mont%204250%2C%20Gregorio%20de%20Laferrere" target="_blank" rel="noreferrer">Domingo 09:00 hs</a><span>Reunion de Domingo</span></li>
+          </ul>
+          <p class="communion-note"><span aria-hidden="true">✦</span> Primer domingo de cada mes: Santa Cena del Señor.</p>
+        </div>
+      </section>
+
+      <section id="settingsScreen" class="screen settings-screen">
+        <div id="settingsPreview" class="settings-preview">
+          <span>Vista previa</span>
+          <strong>Contadme esa historia</strong>
+          <p>Contadme la antigua historia,<br />que narra de un Rey divino.</p>
+        </div>
+
+        <fieldset>
+          <legend>Tamano de fuente</legend>
+          <label><input type="radio" name="fontSize" value="xs" /> Muy chica</label>
+          <label><input type="radio" name="fontSize" value="sm" /> Chica</label>
+          <label><input type="radio" name="fontSize" value="md" /> Normal</label>
+          <label><input type="radio" name="fontSize" value="lg" /> Grande</label>
+          <label><input type="radio" name="fontSize" value="xl" /> Muy grande</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Tema</legend>
+          <label><input type="radio" name="theme" value="light" /> Claro</label>
+          <label><input type="radio" name="theme" value="dark" /> Oscuro</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Alineacion del texto</legend>
+          <label><input type="radio" name="align" value="left" /> Izquierda</label>
+          <label><input type="radio" name="align" value="center" /> Centro</label>
+          <label><input type="radio" name="align" value="right" /> Derecha</label>
+        </fieldset>
+
+        <fieldset class="mobile-setting">
+          <legend>Celular</legend>
+          <label class="checkbox-row"><input type="checkbox" name="fullscreen" /> Pantalla completa al abrir himnos</label>
+        </fieldset>
+
+        <div class="settings-actions">
+          <button id="resetSettings" class="secondary-button" type="button">Restaurar</button>
+          <button id="applySettings" class="primary-button" type="button">Aplicar</button>
+        </div>
+      </section>
+    </main>
+
+    <aside id="songSheet" class="song-sheet" aria-hidden="true">
+      <div class="sheet-backdrop" data-close-sheet></div>
+      <article class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="songTitle">
+        <div class="sheet-actions">
+          <button id="closeSheet" class="bar-button dark" type="button" aria-label="Cerrar">‹</button>
+          <strong>Himnario Cristo El Rey</strong>
+          <button id="favoriteButton" class="bar-button dark" type="button" aria-label="Marcar favorita">☆</button>
+        </div>
+        <div class="song-heading">
+          <button id="songTone" class="song-tone" type="button" aria-label="Seleccionar tonalidad">
+            <span aria-hidden="true">♪</span>
+            <strong></strong>
+          </button>
+          <div>
+            <p id="songNumber" class="song-number"></p>
+            <h2 id="songTitle"></h2>
+          </div>
+        </div>
+        <pre id="songLyrics" class="lyrics"></pre>
+        <footer class="song-footer">Iglesia Evangélica Pentecostal Cristo El Rey Central</footer>
+      </article>
+    </aside>
+
+    <dialog id="toneDialog">
+      <form method="dialog" class="dialog-card">
+        <div class="dialog-title-row">
+          <h2>Seleccionar Tonalidad</h2>
+          <button class="dialog-x" type="button" id="closeToneDialog" aria-label="Cerrar">×</button>
+        </div>
+        <p class="tone-help">Elegí la nota para mostrarla junto al himno.</p>
+        <div id="toneOptions" class="tone-options"></div>
+      </form>
+    </dialog>
+
+    <script src="./app.js?v=38" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "scripts": {
+    "consolidar-correcciones": "node tools/apply-firebase-corrections.mjs",
+    "deploy": "firebase deploy"
+  }
+}

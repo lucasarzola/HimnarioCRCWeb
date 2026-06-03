@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg" cx="28%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#352812"/>
+      <stop offset="0.48" stop-color="#151519"/>
+      <stop offset="1" stop-color="#08080b"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="130" y1="80" x2="480" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8d56d"/>
+      <stop offset="0.45" stop-color="#c79722"/>
+      <stop offset="1" stop-color="#8d650c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g opacity="0.18" fill="#f7d263">
+    <circle cx="116" cy="86" r="8"/>
+    <circle cx="1044" cy="118" r="10"/>
+    <circle cx="1000" cy="512" r="6"/>
+    <circle cx="620" cy="96" r="5"/>
+    <circle cx="126" cy="502" r="5"/>
+  </g>
+  <circle cx="320" cy="315" r="198" fill="none" stroke="url(#gold)" stroke-width="10"/>
+  <circle cx="320" cy="315" r="166" fill="none" stroke="#c79722" stroke-width="5" stroke-dasharray="18 13"/>
+  <g fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M190 340l28-136 91 104 50-136 75 136 63-104 34 136H190z" stroke-width="20"/>
+    <path d="M218 360h265" stroke-width="20"/>
+    <circle cx="218" cy="204" r="14" fill="#c79722" stroke-width="8"/>
+    <circle cx="359" cy="172" r="14" fill="#c79722" stroke-width="8"/>
+    <circle cx="497" cy="204" r="14" fill="#c79722" stroke-width="8"/>
+  </g>
+  <text x="320" y="415" text-anchor="middle" fill="#d7aa35" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="5">C.R.C</text>
+  <text x="610" y="272" fill="#f8f1dc" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="900">Himnos</text>
+  <text x="610" y="354" fill="#c79722" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="900">Cristo El Rey</text>
+  <text x="614" y="415" fill="#cfc7b2" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Himnario offline de la Iglesia Cristo El Rey Central</text>
+</svg>
