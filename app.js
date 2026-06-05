@@ -7,11 +7,11 @@ const FAVORITES = "favorites";
 const RECENTS = "recents";
 const TONES = "tones";
 const SETTINGS = "settings";
-const APP_VERSION = "2026.06.03.59";
+const APP_VERSION = "2026.06.03.60";
 const APP_VERSION_KEY = "app-version";
 const SEED_VERSION = "himnos-221-v51";
 const SEED_VERSION_KEY = "seed-version";
-const FULL_DATA_URL = "./songs-data.js?v=59";
+const FULL_DATA_URL = "./songs-data.js?v=60";
 const PUBLIC_APP_URL = "https://himnoscristoelrey.web.app/";
 const INSTALL_DISMISSED_KEY = "install-dismissed-version";
 const TONE_OPTIONS = ["Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si", "Eliminar tonalidad"];
@@ -95,7 +95,7 @@ async function init() {
   await registerServiceWorker();
   await checkForAppUpdates();
   if (!state.fullSongsLoaded) loadFullSongsInBackground();
-  openSongFromUrl();
+  openSongFromUrl({ prepareHistory: true });
 }
 
 function openDatabase() {
@@ -272,6 +272,7 @@ function bindEvents() {
   els.toneDialog.addEventListener("click", (event) => {
     if (event.target === els.toneDialog) els.toneDialog.close();
   });
+  window.addEventListener("popstate", handleHistoryBack);
 
   document.querySelectorAll("input[name='fontSize'], input[name='theme'], input[name='align'], input[name='fullscreen']").forEach((input) => {
     input.addEventListener("change", () => {
@@ -328,6 +329,7 @@ function renderSongs() {
   for (const song of songs) {
     const row = document.createElement("article");
     row.className = "song-row";
+    row.dataset.songId = song.id;
     row.innerHTML = `
       <div class="tone-cell">
         <button class="tone-button" type="button" aria-label="Seleccionar tonalidad">
@@ -390,18 +392,21 @@ async function openSong(song, options = {}) {
   }
 }
 
-function closeSong() {
+function closeSong(options = {}) {
+  const { updateUrl = true, restorePosition = true } = options;
+  const closedSongId = state.currentSong?.id;
   els.songSheet.classList.remove("open");
   els.songSheet.setAttribute("aria-hidden", "true");
   state.currentSong = null;
-  clearSongUrl();
+  if (updateUrl) clearSongUrl();
+  if (restorePosition) restoreSongPosition(closedSongId);
 }
 
 function updateSongUrl(song) {
-  if (!history.replaceState || !song?.number) return;
+  if (!history.pushState || !song?.number) return;
   const url = new URL(window.location.href);
   url.searchParams.set("himno", song.number);
-  history.replaceState({ songNumber: song.number }, "", url);
+  history.pushState({ songNumber: song.number, songId: song.id, screen: state.screen }, "", url);
 }
 
 function clearSongUrl() {
@@ -410,6 +415,26 @@ function clearSongUrl() {
   if (!url.searchParams.has("himno")) return;
   url.searchParams.delete("himno");
   history.replaceState({}, "", url);
+}
+
+function handleHistoryBack() {
+  const number = new URLSearchParams(window.location.search).get("himno");
+  if (number) {
+    openSongFromUrl();
+    return;
+  }
+
+  if (state.currentSong) {
+    closeSong({ updateUrl: false, restorePosition: true });
+  }
+}
+
+function restoreSongPosition(songId) {
+  if (!songId) return;
+  requestAnimationFrame(() => {
+    const row = [...document.querySelectorAll("[data-song-id]")].find((item) => item.dataset.songId === songId);
+    row?.scrollIntoView({ block: "center" });
+  });
 }
 
 function buildSongUrl(song) {
@@ -458,7 +483,7 @@ function copyTextFallback(text) {
   return Promise.resolve();
 }
 
-async function openSongFromUrl() {
+async function openSongFromUrl(options = {}) {
   const number = new URLSearchParams(window.location.search).get("himno");
   if (!number) return;
   let song = state.songs.find((item) => String(item.number) === String(number));
@@ -466,7 +491,18 @@ async function openSongFromUrl() {
     const fullSongs = await loadFullSongsInBackground();
     song = fullSongs.find((item) => String(item.number) === String(number)) || song;
   }
-  if (song) openSong(song, { skipUrl: true });
+  if (!song) return;
+
+  if (options.prepareHistory && history.replaceState && history.pushState) {
+    const listUrl = new URL(window.location.href);
+    listUrl.searchParams.delete("himno");
+    history.replaceState({ screen: state.screen }, "", listUrl);
+    const songUrl = new URL(listUrl);
+    songUrl.searchParams.set("himno", song.number);
+    history.pushState({ songNumber: song.number, songId: song.id, screen: state.screen }, "", songUrl);
+  }
+
+  openSong(song, { skipUrl: true });
 }
 
 function toggleFavorite(songId) {
