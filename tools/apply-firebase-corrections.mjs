@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, "..");
 const projectId = await readProjectId();
 const collectionArg = process.argv.find((arg) => arg.startsWith("--collection="));
-const collections = collectionArg ? [collectionArg.split("=").slice(1).join("=")] : ["songs", "Himnos"];
+const collections = collectionArg ? [collectionArg.split("=").slice(1).join("=")] : ["Songs", "songs", "Himnos"];
 const keepRemote = process.argv.includes("--keep-remote");
 const deleteRemote = process.argv.includes("--delete-remote");
 
@@ -142,6 +142,7 @@ async function bumpVersion() {
   const appPath = join(projectRoot, "app.js");
   const swPath = join(projectRoot, "service-worker.js");
   const htmlPath = join(projectRoot, "index.html");
+  const manifestPath = join(projectRoot, "manifest.webmanifest");
   const versionPath = join(projectRoot, "app-version.json");
   const currentVersion = JSON.parse(await readFile(versionPath, "utf8")).version || "2026.06.03.0";
   const parts = currentVersion.split(".");
@@ -151,12 +152,20 @@ async function bumpVersion() {
 
   await replaceInFile(appPath, [
     [/const APP_VERSION = "[^"]+";/, `const APP_VERSION = "${nextVersion}";`],
+    [/const SEED_VERSION = "[^"]+";/, `const SEED_VERSION = "himnos-221-v${cacheNumber}";`],
     [/const FULL_DATA_URL = "\.\/songs-data\.js\?v=[^"]+";/, `const FULL_DATA_URL = "./songs-data.js?v=${cacheNumber}";`],
   ]);
   await replaceInFile(swPath, [[/const CACHE_NAME = "cristo-rey-cancionero-v[^"]+";/, `const CACHE_NAME = "cristo-rey-cancionero-v${cacheNumber}";`]]);
   await replaceInFile(htmlPath, [
+    [/\.\/manifest\.webmanifest\?v=\d+/g, `./manifest.webmanifest?v=${cacheNumber}`],
+    [/\.\/icon\.svg\?v=\d+/g, `./icon.svg?v=${cacheNumber}`],
+    [/\.\/icon-512\.png\?v=\d+/g, `./icon-512.png?v=${cacheNumber}`],
     [/\.\/styles\.css\?v=\d+/g, `./styles.css?v=${cacheNumber}`],
     [/\.\/app\.js\?v=\d+/g, `./app.js?v=${cacheNumber}`],
+  ]);
+  await replaceInFile(manifestPath, [
+    [/\.\/icon-512\.png\?v=\d+/g, `./icon-512.png?v=${cacheNumber}`],
+    [/\.\/icon\.svg\?v=\d+/g, `./icon.svg?v=${cacheNumber}`],
   ]);
   await writeFile(versionPath, `${JSON.stringify({ version: nextVersion }, null, 2)}\n`, "utf8");
 }

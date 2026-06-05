@@ -7,6 +7,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /Songs/{songId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /Himnos/{songId} {
       allow read: if true;
       allow write: if false;

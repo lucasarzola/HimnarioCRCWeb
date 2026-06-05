@@ -64,15 +64,28 @@ Para que el modo offline funcione en celulares, conviene servir la carpeta por H
 
 ## Consolidar correcciones de Firebase
 
-Cuando edites una letra en Firebase, dejala como documento dentro de la coleccion `songs`. Para pasar esas correcciones al archivo base del cancionero y limpiar Firebase, ejecuta desde esta carpeta:
+Cuando edites una letra en Firebase, dejala como documento dentro de la coleccion `Songs`. Para pasar esas correcciones al archivo base del cancionero, ejecuta desde esta carpeta:
 
 ```bash
 npm run consolidar-correcciones
-npm run deploy
 ```
 
-El primer comando lee las correcciones, actualiza `songs-data.js` y `songs-index.js`, sube la version interna de la app y borra de Firebase los documentos ya incorporados. Si queres probar sin borrar Firebase, usa:
+El comando lee las correcciones, actualiza `songs-data.js` y `songs-index.js`, y sube la version interna de la app. No borra Firebase por defecto. Si queres borrar los documentos ya incorporados, usa:
 
 ```bash
-npm run consolidar-correcciones -- --keep-remote
+npm run consolidar-correcciones -- --delete-remote
+```
+
+## Despliegue staging y produccion
+
+Primero subilo a staging para probar en una URL temporal de Firebase:
+
+```bash
+npm run deploy:staging
+```
+
+Firebase muestra una URL de preview. Probala en celular. Si esta todo bien, publicalo en produccion:
+
+```bash
+npm run deploy:prod
 ```

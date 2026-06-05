@@ -466,7 +466,7 @@ export const songIndex = [
   },
   {
     "number": "94",
-    "title": "Ruf",
+    "title": "Ruth",
     "preview": "Al pensar en esta situación,"
   },
   {
@@ -486,7 +486,7 @@ export const songIndex = [
   },
   {
     "number": "98",
-    "title": "Vimos su Gloria",
+    "title": "Vimos Su Gloria",
     "preview": "//Nosotros estuvimos en el monte santo"
   },
   {

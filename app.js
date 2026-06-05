@@ -7,11 +7,13 @@ const FAVORITES = "favorites";
 const RECENTS = "recents";
 const TONES = "tones";
 const SETTINGS = "settings";
-const APP_VERSION = "2026.06.03.38";
+const APP_VERSION = "2026.06.03.59";
 const APP_VERSION_KEY = "app-version";
-const SEED_VERSION = "himnos-221-v3";
+const SEED_VERSION = "himnos-221-v51";
 const SEED_VERSION_KEY = "seed-version";
-const FULL_DATA_URL = "./songs-data.js?v=38";
+const FULL_DATA_URL = "./songs-data.js?v=59";
+const PUBLIC_APP_URL = "https://himnoscristoelrey.web.app/";
+const INSTALL_DISMISSED_KEY = "install-dismissed-version";
 const TONE_OPTIONS = ["Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si", "Eliminar tonalidad"];
 
 const defaultSettings = {
@@ -59,6 +61,7 @@ const els = {
   songSheet: document.querySelector("#songSheet"),
   closeSheet: document.querySelector("#closeSheet"),
   favoriteButton: document.querySelector("#favoriteButton"),
+  shareSongButton: document.querySelector("#shareSongButton"),
   songTone: document.querySelector("#songTone"),
   songNumber: document.querySelector("#songNumber"),
   songTitle: document.querySelector("#songTitle"),
@@ -69,9 +72,14 @@ const els = {
   settingsPreview: document.querySelector("#settingsPreview"),
   applySettingsButton: document.querySelector("#applySettings"),
   resetSettingsButton: document.querySelector("#resetSettings"),
+  installPrompt: document.querySelector("#installPrompt"),
+  installPromptText: document.querySelector("#installPromptText"),
+  installApp: document.querySelector("#installApp"),
+  dismissInstall: document.querySelector("#dismissInstall"),
 };
 
 let db;
+let deferredInstallPrompt = null;
 
 init();
 
@@ -87,6 +95,7 @@ async function init() {
   await registerServiceWorker();
   await checkForAppUpdates();
   if (!state.fullSongsLoaded) loadFullSongsInBackground();
+  openSongFromUrl();
 }
 
 function openDatabase() {
@@ -113,8 +122,7 @@ async function ensureFastSongIndex() {
   const songs = await getAllSongs();
   const storedVersion = localStorage.getItem(SEED_VERSION_KEY);
   if (songs.length >= songIndex.length && storedVersion === SEED_VERSION) return;
-  if (songs.length > 0) await mergeBundledSongs(songIndex);
-  else await replaceSongs(songIndex);
+  await replaceSongs(songIndex);
   localStorage.setItem(SEED_VERSION_KEY, SEED_VERSION);
 }
 
@@ -155,12 +163,10 @@ async function mergeBundledSongs(bundledSongs) {
     const bundled = normalizeSong(song, index);
     const current = currentByNumber.get(String(bundled.number)) || currentById.get(bundled.id);
     if (!current) return bundled;
-    if (current.source === "remote") return { ...bundled, ...current };
     return {
-      ...bundled,
       ...current,
-      lyrics: current.lyrics || bundled.lyrics,
-      preview: current.preview || bundled.preview,
+      ...bundled,
+      source: "bundled",
     };
   });
   await replaceSongs(merged);
@@ -257,6 +263,7 @@ function bindEvents() {
 
   els.closeSheet.addEventListener("click", closeSong);
   els.favoriteButton.addEventListener("click", () => toggleFavorite(state.currentSong?.id));
+  els.shareSongButton.addEventListener("click", shareCurrentSong);
   els.songTone.addEventListener("click", () => {
     if (state.currentSong) openToneDialog(state.currentSong);
   });
@@ -290,6 +297,9 @@ function bindEvents() {
     applySettings();
     renderSongs();
   });
+
+  els.installApp.addEventListener("click", installApp);
+  els.dismissInstall.addEventListener("click", dismissInstallPrompt);
 }
 
 function render() {
@@ -356,7 +366,7 @@ function filteredSongs() {
   return songs.filter((song) => `${song.number} ${song.title} ${song.preview || ""} ${song.lyrics || ""}`.toLowerCase().includes(state.query));
 }
 
-async function openSong(song) {
+async function openSong(song, options = {}) {
   requestAppFullscreen();
   let selectedSong = song;
   state.currentSong = selectedSong;
@@ -369,18 +379,94 @@ async function openSong(song) {
   els.favoriteButton.textContent = state.favorites.has(selectedSong.id) ? "★" : "☆";
   els.songSheet.classList.add("open");
   els.songSheet.setAttribute("aria-hidden", "false");
+  if (!options.skipUrl) updateSongUrl(selectedSong);
 
   if (!selectedSong.lyrics) {
     const fullSongs = await loadFullSongsInBackground();
     selectedSong = fullSongs.find((item) => item.id === song.id || item.number === song.number) || selectedSong;
     state.currentSong = selectedSong;
     els.songLyrics.textContent = selectedSong.lyrics || "Todavia no se cargo la letra de este himno.";
+    if (!options.skipUrl) updateSongUrl(selectedSong);
   }
 }
 
 function closeSong() {
   els.songSheet.classList.remove("open");
   els.songSheet.setAttribute("aria-hidden", "true");
+  state.currentSong = null;
+  clearSongUrl();
+}
+
+function updateSongUrl(song) {
+  if (!history.replaceState || !song?.number) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("himno", song.number);
+  history.replaceState({ songNumber: song.number }, "", url);
+}
+
+function clearSongUrl() {
+  if (!history.replaceState) return;
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has("himno")) return;
+  url.searchParams.delete("himno");
+  history.replaceState({}, "", url);
+}
+
+function buildSongUrl(song) {
+  const base = location.protocol.startsWith("http") ? new URL(location.href) : new URL(PUBLIC_APP_URL);
+  base.search = "";
+  base.hash = "";
+  base.searchParams.set("himno", song.number);
+  return base.toString();
+}
+
+async function shareCurrentSong() {
+  const song = state.currentSong;
+  if (!song) return;
+  const url = buildSongUrl(song);
+  const text = `Himno ${song.number} - ${song.title}`;
+  const shareData = {
+    title: text,
+    text: `${text}\nHimnario Cristo El Rey`,
+    url,
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    setOfflineStatus("Enlace del himno copiado");
+  } catch (error) {
+    if (error?.name === "AbortError") return;
+    await copyTextFallback(url);
+    setOfflineStatus("Enlace del himno copiado");
+  }
+}
+
+function copyTextFallback(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.append(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+  return Promise.resolve();
+}
+
+async function openSongFromUrl() {
+  const number = new URLSearchParams(window.location.search).get("himno");
+  if (!number) return;
+  let song = state.songs.find((item) => String(item.number) === String(number));
+  if (!song || !song.lyrics) {
+    const fullSongs = await loadFullSongsInBackground();
+    song = fullSongs.find((item) => String(item.number) === String(number)) || song;
+  }
+  if (song) openSong(song, { skipUrl: true });
 }
 
 function toggleFavorite(songId) {
@@ -533,6 +619,51 @@ async function registerServiceWorker() {
   }
 }
 
+function isInstalledApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function shouldShowInstallPrompt() {
+  if (isInstalledApp()) return false;
+  if (!els.installPrompt) return false;
+  return localStorage.getItem(INSTALL_DISMISSED_KEY) !== APP_VERSION;
+}
+
+function showInstallPrompt(mode = "native") {
+  if (!shouldShowInstallPrompt()) return;
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  els.installPrompt.dataset.mode = mode;
+  els.installPromptText.textContent = isIos
+    ? "En iPhone, tocá Compartir y luego Agregar a pantalla de inicio para abrirla como app."
+    : "Agregala a la pantalla de inicio para abrirla como app y usarla sin internet.";
+  els.installApp.textContent = mode === "manual" ? "Entendido" : "Instalar";
+  els.installPrompt.classList.remove("hidden");
+}
+
+function hideInstallPrompt() {
+  els.installPrompt?.classList.add("hidden");
+}
+
+async function installApp() {
+  if (!deferredInstallPrompt) {
+    localStorage.setItem(INSTALL_DISMISSED_KEY, APP_VERSION);
+    hideInstallPrompt();
+    return;
+  }
+
+  const promptEvent = deferredInstallPrompt;
+  deferredInstallPrompt = null;
+  promptEvent.prompt();
+  const choice = await promptEvent.userChoice.catch(() => ({ outcome: "dismissed" }));
+  if (choice.outcome !== "accepted") localStorage.setItem(INSTALL_DISMISSED_KEY, APP_VERSION);
+  hideInstallPrompt();
+}
+
+function dismissInstallPrompt() {
+  localStorage.setItem(INSTALL_DISMISSED_KEY, APP_VERSION);
+  hideInstallPrompt();
+}
+
 async function checkForAppUpdates() {
   if (!navigator.onLine) return;
 
@@ -556,6 +687,7 @@ async function checkForAppUpdates() {
       setOfflineStatus("Hay una nueva version. Actualizando...");
       localStorage.setItem(APP_VERSION_KEY, remoteVersion);
       await refreshAppShell();
+      await clearSongStorage();
       window.location.reload();
       return;
     }
@@ -578,6 +710,18 @@ async function refreshAppShell() {
     const keys = await caches.keys();
     await Promise.all(keys.filter((key) => key.startsWith("cristo-rey-cancionero-")).map((key) => caches.delete(key)));
   }
+}
+
+function clearSongStorage() {
+  localStorage.removeItem(SEED_VERSION_KEY);
+  if (db) db.close();
+
+  return new Promise((resolve) => {
+    const request = indexedDB.deleteDatabase(DB_NAME);
+    request.onsuccess = () => resolve();
+    request.onerror = () => resolve();
+    request.onblocked = () => resolve();
+  });
 }
 
 function requestAppFullscreen() {
@@ -608,4 +752,21 @@ window.addEventListener("online", () => {
 
 window.addEventListener("offline", () => {
   setOfflineStatus("Estas usando la app sin conexion");
+});
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  showInstallPrompt("native");
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  hideInstallPrompt();
+  localStorage.setItem(INSTALL_DISMISSED_KEY, APP_VERSION);
+});
+
+window.addEventListener("load", () => {
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIos) setTimeout(() => showInstallPrompt("manual"), 1200);
 });

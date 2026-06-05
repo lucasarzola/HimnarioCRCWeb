@@ -1,6 +1,6 @@
 {
-  "name": "Himnos Cristo El Rey",
-  "short_name": "Cristo Rey",
+  "name": "Himnario Cristo El Rey",
+  "short_name": "Himnario CRC",
   "description": "Himnario mobile offline de Cristo El Rey.",
   "start_url": "./index.html",
   "scope": "./",
@@ -9,13 +9,13 @@
   "theme_color": "#6200ee",
   "icons": [
     {
-      "src": "./icon-512.png",
+      "src": "./icon-512.png?v=59",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./icon.svg",
+      "src": "./icon.svg?v=59",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

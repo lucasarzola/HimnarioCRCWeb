@@ -4,18 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#6200ee" />
-    <title>Himnos Cristo El Rey</title>
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon-512.png" />
-    <meta property="og:title" content="Himnos Cristo El Rey" />
+    <title>Himnario Cristo El Rey</title>
+    <link rel="manifest" href="./manifest.webmanifest?v=59" />
+    <link rel="icon" href="./icon.svg?v=59" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon-512.png?v=59" />
+    <meta property="og:title" content="Himnario Cristo El Rey" />
     <meta property="og:description" content="Himnario Cristo El Rey Oficial - Iglesia Cristo El Rey Central" />
     <meta property="og:image" content="https://himnoscristoelrey.web.app/preview.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Himnos Cristo El Rey" />
+    <meta name="twitter:title" content="Himnario Cristo El Rey" />
     <meta name="twitter:description" content="Himnario Cristo El Rey Oficial - Iglesia Cristo El Rey Central" />
     <meta name="twitter:image" content="https://himnoscristoelrey.web.app/preview.png" />
-    <link rel="stylesheet" href="./styles.css?v=38" />
+    <link rel="stylesheet" href="./styles.css?v=59" />
   </head>
   <body>
     <header class="app-bar">
@@ -39,7 +39,7 @@
       <section id="homeScreen" class="screen active">
         <label class="search-row">
           <span aria-hidden="true">⌕</span>
-          <input id="searchInput" type="search" placeholder="Buscar himno..." autocomplete="off" />
+          <input id="searchInput" type="text" placeholder="Buscar himno..." autocomplete="off" />
           <button id="clearSearch" type="button" aria-label="Limpiar busqueda">×</button>
         </label>
         <p id="offlineStatus" class="offline-status">Preparando cancionero offline...</p>
@@ -142,6 +142,15 @@
         <div class="sheet-actions">
           <button id="closeSheet" class="bar-button dark" type="button" aria-label="Cerrar">‹</button>
           <strong>Himnario Cristo El Rey</strong>
+          <button id="shareSongButton" class="bar-button dark share-button" type="button" aria-label="Compartir himno">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8.8 10.7 15.2 7" />
+              <path d="M8.8 13.3 15.2 17" />
+              <circle cx="6.5" cy="12" r="2.6" />
+              <circle cx="17.5" cy="5.7" r="2.6" />
+              <circle cx="17.5" cy="18.3" r="2.6" />
+            </svg>
+          </button>
           <button id="favoriteButton" class="bar-button dark" type="button" aria-label="Marcar favorita">☆</button>
         </div>
         <div class="song-heading">
@@ -170,6 +179,17 @@
       </form>
     </dialog>
 
-    <script src="./app.js?v=38" type="module"></script>
+    <section id="installPrompt" class="install-prompt hidden" role="dialog" aria-live="polite" aria-label="Instalar aplicacion">
+      <div>
+        <strong>Instalar Himnario Cristo El Rey</strong>
+        <p id="installPromptText">Agregala a la pantalla de inicio para abrirla como app y usarla sin internet.</p>
+      </div>
+      <div class="install-actions">
+        <button id="dismissInstall" class="secondary-button" type="button">Ahora no</button>
+        <button id="installApp" class="primary-button" type="button">Instalar</button>
+      </div>
+    </section>
+
+    <script src="./app.js?v=59" type="module"></script>
   </body>
 </html>
