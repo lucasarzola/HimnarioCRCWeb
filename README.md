@@ -76,6 +76,14 @@ El comando lee las correcciones, actualiza `songs-data.js` y `songs-index.js`, y
 npm run consolidar-correcciones -- --delete-remote
 ```
 
+Campos aceptados para cada himno:
+
+- `number`: numero del himno.
+- `title`: titulo.
+- `lyrics`: letra normal.
+- `originalTone`: tonalidad original, por ejemplo `Do`, `Re#`, `Mi`.
+- `chordedLyrics`: letra con acordes para el modo musico. El formato es poner el acorde entre corchetes antes de la palabra, por ejemplo: `[Do]Contadme la [Sol]antigua historia`.
+
 ## Despliegue staging y produccion
 
 Primero subilo a staging para probar en una URL temporal de Firebase:

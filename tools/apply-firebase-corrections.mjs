@@ -18,7 +18,7 @@ if (!docs.length) {
   console.log(`No hay correcciones pendientes en Firebase. Proyecto: ${projectId}. Colecciones revisadas: ${collections.join(", ")}.`);
   console.log("Si tu coleccion tiene otro nombre, ejecuta: npm run consolidar-correcciones -- --collection=NOMBRE_DE_LA_COLECCION");
 } else {
-  const corrections = docs.map(parseFirestoreDoc).filter((song) => song.number && (song.title || song.lyrics));
+  const corrections = docs.map(parseFirestoreDoc).filter((song) => song.number && (song.title || song.lyrics || song.chordedLyrics || song.originalTone));
 
   if (!corrections.length) {
     console.log(`Firebase tiene documentos en ${collection}, pero ninguno tiene number/title/lyrics validos.`);
@@ -35,7 +35,7 @@ if (!docs.length) {
     if (!deleteRemote) {
       console.log("Los documentos de Firebase no se borraron. Para borrarlos al consolidar usa: npm run consolidar-correcciones -- --delete-remote");
     }
-    console.log("Ahora ejecuta: npm run deploy");
+    console.log("Ahora ejecuta: npm run deploy:staging y, si esta todo bien, npm run deploy:prod");
   }
 }
 
@@ -79,8 +79,10 @@ function parseFirestoreDoc(doc) {
   const number = String(readField(fields.number) ?? readField(fields.numero) ?? readField(fields.nro) ?? doc.name.split("/").pop()).trim();
   const title = String(readField(fields.title) ?? readField(fields.titulo) ?? readField(fields.nombre) ?? "").trim();
   const lyrics = String(readField(fields.lyrics) ?? readField(fields.letra) ?? readField(fields.texto) ?? "").trim();
+  const chordedLyrics = String(readField(fields.chordedLyrics) ?? readField(fields.lyricsWithChords) ?? readField(fields.letraConAcordes) ?? readField(fields.acordes) ?? "").trim();
+  const originalTone = String(readField(fields.originalTone) ?? readField(fields.originalKey) ?? readField(fields.tonoOriginal) ?? readField(fields.tonalidadOriginal) ?? "").trim();
   const id = String(readField(fields.id) ?? "").trim();
-  return { docName: doc.name, id, number, title, lyrics };
+  return { docName: doc.name, id, number, title, lyrics, chordedLyrics, originalTone };
 }
 
 function readField(field) {
@@ -108,6 +110,8 @@ async function applyCorrections(correctionsToApply) {
     };
 
     if (correction.id) nextSong.id = correction.id;
+    if (correction.chordedLyrics) nextSong.chordedLyrics = correction.chordedLyrics;
+    if (correction.originalTone) nextSong.originalTone = correction.originalTone;
 
     if (found) {
       seedSongs[found.index] = { ...found.song, ...nextSong };

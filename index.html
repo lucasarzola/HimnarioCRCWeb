@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#6200ee" />
     <title>Himnario Cristo El Rey</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=60" />
-    <link rel="icon" href="./icon.svg?v=60" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon-512.png?v=60" />
+    <link rel="manifest" href="./manifest.webmanifest?v=82" />
+    <link rel="icon" href="./icon.svg?v=82" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon-512.png?v=82" />
     <meta property="og:title" content="Himnario Cristo El Rey" />
     <meta property="og:description" content="Himnario Cristo El Rey Oficial - Iglesia Cristo El Rey Central" />
     <meta property="og:image" content="https://himnoscristoelrey.web.app/preview.png" />
@@ -15,13 +15,13 @@
     <meta name="twitter:title" content="Himnario Cristo El Rey" />
     <meta name="twitter:description" content="Himnario Cristo El Rey Oficial - Iglesia Cristo El Rey Central" />
     <meta name="twitter:image" content="https://himnoscristoelrey.web.app/preview.png" />
-    <link rel="stylesheet" href="./styles.css?v=60" />
+    <link rel="stylesheet" href="./styles.css?v=82" />
   </head>
   <body>
     <header class="app-bar">
       <button id="menuButton" class="bar-button" type="button" aria-label="Abrir menu">☰</button>
       <button id="backButton" class="bar-button hidden" type="button" aria-label="Volver">‹</button>
-      <h1 id="screenTitle">Himnario Cristo El Rey</h1>
+      <h1 id="screenTitle">Himnarios Cristo El Rey</h1>
       <button id="settingsButton" class="bar-button" type="button" aria-label="Configuracion">🔧</button>
     </header>
 
@@ -129,6 +129,11 @@
           <label class="checkbox-row"><input type="checkbox" name="fullscreen" /> Pantalla completa al abrir himnos</label>
         </fieldset>
 
+        <fieldset>
+          <legend>Músicos</legend>
+          <label class="checkbox-row"><input type="checkbox" name="musicianMode" /> Activar modo Músico</label>
+        </fieldset>
+
         <div class="settings-actions">
           <button id="resetSettings" class="secondary-button" type="button">Restaurar</button>
           <button id="applySettings" class="primary-button" type="button">Aplicar</button>
@@ -163,7 +168,14 @@
             <h2 id="songTitle"></h2>
           </div>
         </div>
-        <pre id="songLyrics" class="lyrics"></pre>
+        <section id="musicianToolbar" class="musician-toolbar hidden" aria-label="Herramientas de músico">
+          <button type="button" data-transpose="-2">-1 tono</button>
+          <button type="button" data-transpose="-1">-1/2</button>
+          <button type="button" data-transpose="0">Original</button>
+          <button type="button" data-transpose="1">+1/2</button>
+          <button type="button" data-transpose="2">+1 tono</button>
+        </section>
+        <div id="songLyrics" class="lyrics"></div>
         <footer class="song-footer">Iglesia Evangélica Pentecostal Cristo El Rey Central</footer>
       </article>
     </aside>
@@ -174,8 +186,19 @@
           <h2>Seleccionar Tonalidad</h2>
           <button class="dialog-x" type="button" id="closeToneDialog" aria-label="Cerrar">×</button>
         </div>
-        <p class="tone-help">Elegí la nota para mostrarla junto al himno.</p>
+        <p class="tone-help">Elegí tu tonalidad o volvé a la tonalidad original si está cargada.</p>
         <div id="toneOptions" class="tone-options"></div>
+      </form>
+    </dialog>
+
+    <dialog id="chordDialog">
+      <form method="dialog" class="dialog-card chord-card">
+        <div class="dialog-title-row">
+          <h2 id="chordTitle">Acorde</h2>
+          <button class="dialog-x" type="button" id="closeChordDialog" aria-label="Cerrar">×</button>
+        </div>
+        <div id="chordDiagram" class="chord-diagram" aria-label="Cómo tocar este acorde en guitarra"></div>
+        <p id="chordHelp" class="tone-help"></p>
       </form>
     </dialog>
 
@@ -190,6 +213,6 @@
       </div>
     </section>
 
-    <script src="./app.js?v=60" type="module"></script>
+    <script src="./app.js?v=82" type="module"></script>
   </body>
 </html>

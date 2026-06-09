@@ -1,11 +1,10 @@
-const CACHE_NAME = "cristo-rey-cancionero-v60";
+const CACHE_NAME = "cristo-rey-cancionero-v82";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./songs-index.js",
-  "./songs-data.js",
   "./app-version.json",
   "./manifest.webmanifest",
   "./icon.svg",

@@ -552,7 +552,7 @@ export const songIndex = [
   {
     "number": "111",
     "title": "Regresa",
-    "preview": "A la montaña los llevé y allí en secreto les hablé:"
+    "preview": "A la montaña los llevó y allí en secreto les habló:"
   },
   {
     "number": "112",
@@ -641,7 +641,7 @@ export const songIndex = [
   },
   {
     "number": "129",
-    "title": "Busco a un Amigo",
+    "title": "Busco a un amigo",
     "preview": "Hace algún tiempo ya que yo"
   },
   {
@@ -686,7 +686,7 @@ export const songIndex = [
   },
   {
     "number": "138",
-    "title": "Un nuevo aniversario",
+    "title": "Un nuevo Aniversario",
     "preview": "Un nuevo aniversario de nuestro matrimonio,"
   },
   {
